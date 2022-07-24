@@ -174,11 +174,7 @@ void MasterBehaviorVars::patch(Actor* apActor, BSAnimationGraphManager* pManager
                 uint64_t aKey = pManager->GetDescriptorKey();
 
                 //register the patch to AnimationGraphDescriptorManager
-                AnimationGraphDescriptorManager::Builder s_build(AnimationGraphDescriptorManager::Get(), aKey, *animationDescriptor);
-                AnimationGraphDescriptorManager::Builder::Builder(AnimationGraphDescriptorManager::Get(), aKey,
-                                                                 *animationDescriptor);
-                new AnimationGraphDescriptorManager::Builder(AnimationGraphDescriptorManager::Get(), aKey,
-                                                                     *animationDescriptor);
+                new AnimationGraphDescriptorManager::Builder(AnimationGraphDescriptorManager::Get(), aKey, *animationDescriptor);
 
                 //Debug
                 spdlog::info("boolvar");
