@@ -38,6 +38,9 @@
 #include <Services/DebugService.h>
 #include <World.h>
 
+// Add modded MasterBehaviorsFiles Compatibility
+#include <ModCompat/MasterBehaviorVars.h>
+
 using ScopedReferencesOverride = ScopedOverride<TESObjectREFR>;
 thread_local uint32_t ScopedReferencesOverride::s_refCount = 0;
 
@@ -139,6 +142,17 @@ void TESObjectREFR::SaveAnimationVariables(AnimationVariables& aVariables) const
     {
         BSScopedLock<BSRecursiveLock> _{pManager->lock};
 
+        // Add a crude work araound to allow modded 0_masterbehavior.hkx
+        // This should not be here. If people find a better to place this. Then let me know
+        auto* mpActor = Cast<Actor>(this);
+        if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
+            mpActor->formID == 0x14)
+        {
+            MasterBehaviorVars::Get()->patch(mpActor, pManager);
+        }
+        // compatibility code ends here
+
+
         if (pManager->animationGraphIndex < pManager->animationGraphs.size)
         {
             auto* pActor = Cast<Actor>(this);
@@ -167,6 +181,9 @@ void TESObjectREFR::SaveAnimationVariables(AnimationVariables& aVariables) const
                     pExtendedActor->GraphDescriptorHash = pManager->GetDescriptorKey(0);
                 else
                     pExtendedActor->GraphDescriptorHash = pManager->GetDescriptorKey();
+
+                spdlog::info("Form id {} has hash of {}", pActor->formID, pExtendedActor->GraphDescriptorHash);
+
             }
 
             auto pDescriptor =
@@ -212,10 +229,21 @@ void TESObjectREFR::SaveAnimationVariables(AnimationVariables& aVariables) const
 
 void TESObjectREFR::LoadAnimationVariables(const AnimationVariables& aVariables) const noexcept
 {
+
     BSAnimationGraphManager* pManager = nullptr;
     if (animationGraphHolder.GetBSAnimationGraph(&pManager))
     {
         BSScopedLock<BSRecursiveLock> _{pManager->lock};
+
+        // Add a crude work araound to allow modded 0_masterbehavior.hkx
+        // This should not be here. If people find a better to place this. Then let me know
+        auto* mpActor = Cast<Actor>(this);
+        if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
+            mpActor->formID == 0x14)
+        {
+            MasterBehaviorVars::Get()->patch(mpActor, pManager);
+        }
+        // compatibility code ends here
 
         if (pManager->animationGraphIndex < pManager->animationGraphs.size)
         {

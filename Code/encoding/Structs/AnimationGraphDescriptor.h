@@ -16,6 +16,25 @@ struct AnimationGraphDescriptor
         IntegerLookupTable.assign(acIntegerList, acIntegerList + P);
     }
 
+    //this is implemented so user can use behavior altering mods
+    /* AnimationGraphDescriptor(TiltedPhoques::Vector<uint32_t> acBooleanList,
+                                TiltedPhoques::Vector<uint32_t> acFloatList,
+                             TiltedPhoques::Vector<uint32_t> acIntegerList)
+    {
+        // N,O,P
+        const uint32_t N = acBooleanList.size(); 
+        const uint32_t O = acFloatList.size();
+        const uint32_t P = acIntegerList.size();
+
+        //we cannot use static assert in this case
+        assert(N <= 128, "Too many boolean variables!");
+        assert((1 + O + P) <= 128, "Too many float and integer!");
+
+        BooleanLookUpTable = TiltedPhoques::Vector<uint32_t>(acBooleanList);
+        FloatLookupTable = TiltedPhoques::Vector<uint32_t>(acFloatList);
+        IntegerLookupTable = TiltedPhoques::Vector<uint32_t>(acIntegerList);
+    }*/
+
     bool IsSynced(uint32_t aIdx) const
     {
         auto itor = std::find(std::begin(BooleanLookUpTable), std::end(BooleanLookUpTable), aIdx);

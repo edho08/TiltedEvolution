@@ -1,9 +1,10 @@
 #include <Structs/AnimationGraphDescriptorManager.h>
 #include <Structs/Skyrim/AnimationGraphDescriptor_Master_Behavior.h>
+#include <Structs/AnimationGraphVariable.h>
 
-
-AnimationGraphDescriptor_Master_Behavior::AnimationGraphDescriptor_Master_Behavior(AnimationGraphDescriptorManager& aManager)
-{
+AnimationGraphDescriptor_Master_Behavior::AnimationGraphDescriptor_Master_Behavior(
+    AnimationGraphDescriptorManager& aManager)
+{   
     enum Variables
     {
         kSpeed = 0,
@@ -236,6 +237,9 @@ AnimationGraphDescriptor_Master_Behavior::AnimationGraphDescriptor_Master_Behavi
         kAimGainOnMounted = 227,
         kAimGainOnDragonMount = 228,
         kiWantMountedWeaponAnims = 229,
+        //start modded
+
+        //end modded        
         kiWeaponReady = 230,
         kZoomAcc = 231,
         kAimHeadingMax = 232,
@@ -306,10 +310,11 @@ AnimationGraphDescriptor_Master_Behavior::AnimationGraphDescriptor_Master_Behavi
         kbTalkableWithItem = 297,
         kisCarryItem = 298,
         kIsRomanticFollower = 299,
-        kIsRF_Talk = 300,
+        kIsRF_Talk = 300
     };
 
-    AnimationGraphDescriptorManager::Builder s_builder(aManager, m_key,
+    AnimationGraphDescriptorManager::Builder s_builder(
+        aManager, m_key,
         AnimationGraphDescriptor(
         {
             kbEquipOk,
@@ -407,6 +412,7 @@ AnimationGraphDescriptor_Master_Behavior::AnimationGraphDescriptor_Master_Behavi
             ktestint,
             kcurrentDefaultState
         }));
+        
 }
 
 /*
