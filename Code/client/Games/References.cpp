@@ -38,8 +38,12 @@
 #include <Services/DebugService.h>
 #include <World.h>
 
-// Add modded MasterBehaviorsFiles Compatibility
+// MOD: Behavior Sig
+#include <ModCompat/BehaviorVarSig.h>
 #include <ModCompat/MasterBehaviorVars.h>
+#include<mutex>
+
+std::mutex mutex_lock;
 
 using ScopedReferencesOverride = ScopedOverride<TESObjectREFR>;
 thread_local uint32_t ScopedReferencesOverride::s_refCount = 0;
@@ -145,11 +149,15 @@ void TESObjectREFR::SaveAnimationVariables(AnimationVariables& aVariables) const
         // Add a crude work araound to allow modded 0_masterbehavior.hkx
         // This should not be here. If people find a better to place this. Then let me know
         auto* mpActor = Cast<Actor>(this);
-        if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
+        /* if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
             mpActor->formID == 0x14)
         {
             MasterBehaviorVars::Get()->patch(mpActor, pManager);
         }
+        if (mpActor)
+        {
+            BehaviorVarSig::Get()->patch(pManager, mpActor);
+        }*/
         // compatibility code ends here
 
 
@@ -188,6 +196,13 @@ void TESObjectREFR::SaveAnimationVariables(AnimationVariables& aVariables) const
 
             auto pDescriptor =
                 AnimationGraphDescriptorManager::Get().GetDescriptor(pExtendedActor->GraphDescriptorHash);
+
+            if (!pDescriptor)
+            {
+                spdlog::info("animation description not found for formid {} with hash {}", pActor->formID, pExtendedActor->GraphDescriptorHash);
+                BehaviorVarSig::Get()->patch(pManager, pActor);
+                pDescriptor = AnimationGraphDescriptorManager::Get().GetDescriptor(pExtendedActor->GraphDescriptorHash);
+            }
 
             if (!pDescriptor)
                 return;
@@ -237,13 +252,7 @@ void TESObjectREFR::LoadAnimationVariables(const AnimationVariables& aVariables)
 
         // Add a crude work araound to allow modded 0_masterbehavior.hkx
         // This should not be here. If people find a better to place this. Then let me know
-        auto* mpActor = Cast<Actor>(this);
-        if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
-            mpActor->formID == 0x14)
-        {
-            MasterBehaviorVars::Get()->patch(mpActor, pManager);
-        }
-        // compatibility code ends here
+
 
         if (pManager->animationGraphIndex < pManager->animationGraphs.size)
         {
@@ -267,6 +276,12 @@ void TESObjectREFR::LoadAnimationVariables(const AnimationVariables& aVariables)
             auto pDescriptor =
                 AnimationGraphDescriptorManager::Get().GetDescriptor(pExtendedActor->GraphDescriptorHash);
 
+            /* if (!MasterBehaviorVars::bIsMasterBehaviorVariableSet && !MasterBehaviorVars::bIsPatchFailed &&
+            mpActor->formID == 0x14)
+            {
+            ::Get()->patch(mpActor, pManager);
+            }*/
+            
             if (!pDescriptor)
             {
                 //if ((formID & 0xFF000000) == 0xFF000000)

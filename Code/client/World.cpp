@@ -22,6 +22,9 @@
 #include <Events/PreUpdateEvent.h>
 #include <Events/UpdateEvent.h>
 
+//Mod BehaviorSig
+#include <ModCompat/BehaviorVarSig.h>
+
 World::World()
     : m_runner(m_dispatcher)
     , m_transport(*this, m_dispatcher)
@@ -46,6 +49,9 @@ World::World()
      ctx().emplace<CommandService>(*this, m_transport, m_dispatcher);
      ctx().emplace<PlayerService>(*this, m_dispatcher, m_transport);
      ctx().emplace<StringCacheService>(m_dispatcher);
+
+     //MOD BehaviorSig
+     BehaviorVarSig::Get()->initialize();
 }
 
 World::~World() = default;
