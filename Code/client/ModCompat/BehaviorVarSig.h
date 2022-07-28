@@ -6,6 +6,7 @@ struct BehaviorVarSig
     {
         std::string sigName;
         std::vector<std::string> sigStrings;
+        std::vector<std::string> negSigStrings;
         std::vector<std::string> syncBooleanVar;
         std::vector<std::string> syncFloatVar;
         std::vector<std::string> syncIntegerVar;
